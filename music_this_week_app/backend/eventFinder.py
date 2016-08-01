@@ -53,19 +53,19 @@ class EventFinder(object):
     def assembleRequest(self, searchArgs, pageNum):
         '''Receives search parameters and returns a URL for the endpoint'''
 
-        filters = ['category=music', #seems to return the same results for music or concerts, so this might be unnecessary
+        filterString = '&'.join(
+                            [         '', #padding
+                            'category=music', #seems to return the same results for music or concerts, so this might be unnecessary
                              'location=%s' %searchArgs['location'],
                              'date=%s' %searchArgs['date'],
                              'page_size=%s' %EVENTFUL_RESULTS_PER_PAGE,
                              'page_number=%s' %pageNum,
                              'sort_order=popularity' #Customer Support says this should work but I see no evidence of it working
-                             ]
+                             ] )
 
         baseURL = 'http://api.eventful.com/json/events/search?app_key=%s' % EVENTFUL_KEY
 
-        URL = baseURL
-        for f in filters:
-            URL += '&' + f
+        URL = baseURL + filterString
         return URL
 
     def sendRequest(self, endpoint):
